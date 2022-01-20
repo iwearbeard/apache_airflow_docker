@@ -35,6 +35,6 @@ Python, Apache Airflow y Docker
 * [Apache Airflow](https://airflow.apache.org/) - El framework usado
 * [Docker](https://www.docker.com//) - Herramienta de contenedores
 
-## Autores ✒️
+## Autor ✒️
 
 * **Joaquin Alvarez** - [jalvarezcabada](https://github.com/jalvarezcabada)
