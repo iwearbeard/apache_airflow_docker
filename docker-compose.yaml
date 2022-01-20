@@ -1,0 +1,111 @@
+version: '3'
+
+x-airflow-common:
+  &airflow-common
+  image: pip-python:0.0.3
+  environment:
+    &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: mysql+pymysql://usr_airflowETL:kS9yHaydZslOQfPTcZq5@MDBAIRFLOWPROD:3306/airflow_db
+    AIRFLOW__CELERY__RESULT_BACKEND: db+mysql://usr_airflowETL:kS9yHaydZslOQfPTcZq5@MDBAIRFLOWPROD:3306/airflow_db
+    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CORE__FERNET_KEY: j3joFPaer7Iu59-AxgmcY9VzJiz3aW71XIG465d23aQ=
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
+    _PIP_ADDITIONAL_REQUIREMENTS: "azure-storage-file-datalake==12.1.1"
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - 5432:5432
+    expose:
+      - "5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+  
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 30s
+      retries: 50
+    restart: always
+
+  airflow-webserver:
+    <<: *airflow-common
+    environment:
+      <<: *airflow-common-env
+      _AIRFLOW_DB_UPGRADE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: airflow
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./airflow-config/airflow.cfg:/opt/airflow/airflow.cfg
+    user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
+    command: webserver
+    depends_on:
+      - redis
+      - postgres
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 20s
+      timeout: 30s
+      retries: 5
+    restart: always
+  
+  airflow-scheduler:
+    <<: *airflow-common
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./airflow-config/airflow.cfg:/opt/airflow/airflow.cfg
+    user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
+    command: scheduler
+    depends_on:
+      - redis
+      - postgres
+      - airflow-webserver
+    restart: always
+  
+  flower:
+    <<: *airflow-common
+    user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
+    command: celery flower
+    depends_on:
+      - airflow-worker
+      - redis
+      - postgres
+    ports:
+      - 5555:5555
+    expose:
+      - "5555"
+    restart: always
+  
+  airflow-worker:
+    <<: *airflow-common
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./airflow-config/airflow.cfg:/opt/airflow/airflow.cfg
+    user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
+    command: celery worker
+    depends_on:
+      - airflow-webserver
+      - redis
+      - postgres
+    restart: always
