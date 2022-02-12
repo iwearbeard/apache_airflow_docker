@@ -4,7 +4,7 @@
 
 FROM apache/airflow:2.1.3-python3.9
 
-COPY requirements_airflow.txt .
+COPY requirements.txt .
 
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt
