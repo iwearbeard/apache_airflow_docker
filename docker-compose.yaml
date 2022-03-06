@@ -6,8 +6,8 @@ x-airflow-common:
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__CORE__SQL_ALCHEMY_CONN: mysql+pymysql://usr_airflowETL:kS9yHaydZslOQfPTcZq5@MDBAIRFLOWPROD:3306/airflow_db
-    AIRFLOW__CELERY__RESULT_BACKEND: db+mysql://usr_airflowETL:kS9yHaydZslOQfPTcZq5@MDBAIRFLOWPROD:3306/airflow_db
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://postgres:airflow@postgres/airflow
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: j3joFPaer7Iu59-AxgmcY9VzJiz3aW71XIG465d23aQ=
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
