@@ -5,7 +5,7 @@
 1) _Crear imagen de Docker_
 
 ```
-docker build . -f Dockerfile -t pip-python:0.0.3
+docker build . -f Dockerfile -t pip-python:2.3.0
 ```
 
 2) _Levantar docker-compose con todos los servicios_
