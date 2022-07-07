@@ -10,11 +10,12 @@ x-airflow-common:
     AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
-    AIRFLOW__CORE__FERNET_KEY: j3joFPaer7Iu59-AxgmcY9VzJiz3aW71XIG465d23aQ=
+    AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
     _PIP_ADDITIONAL_REQUIREMENTS: ""
+    AIRFLOW__WEBSERVER__SECRET_KEY: RF6CDgWqtRkDYC1d+2tJCQ==
 
 services:
   postgres:
@@ -56,7 +57,6 @@ services:
       _AIRFLOW_WWW_USER_PASSWORD: airflow
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./airflow-config/airflow.cfg:/opt/airflow/airflow.cfg
     user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
     command: webserver
     depends_on:
@@ -73,9 +73,10 @@ services:
   
   airflow-scheduler:
     <<: *airflow-common
+    environment:
+      <<: *airflow-common-env
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./airflow-config/airflow.cfg:/opt/airflow/airflow.cfg
     user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
     command: scheduler
     depends_on:
@@ -100,9 +101,10 @@ services:
   
   airflow-worker:
     <<: *airflow-common
+    environment:
+      <<: *airflow-common-env
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./airflow-config/airflow.cfg:/opt/airflow/airflow.cfg
     user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
     command: celery worker
     depends_on:

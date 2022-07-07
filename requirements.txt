@@ -8,3 +8,4 @@ apache-airflow-providers-microsoft-mssql
 apache-airflow-providers-http
 apache-airflow-providers-docker
 apache-airflow-providers-databricks
+apache-airflow-providers-airbyte
