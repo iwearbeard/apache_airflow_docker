@@ -4,9 +4,9 @@ from airflow.utils.dates import days_ago
 from airflow.providers.airbyte.operators.airbyte import AirbyteTriggerSyncOperator
 
 default_args = {
-    'owner': 'name',
+    'owner': 'airbyte',
     'start_date': datetime(2021, 10, 14),
-    # 'email': ['<<lista de mails>>'],
+    'email': ['<<lista de mails>>'],
     # 'email_on_failure': True,
     # 'email_on_retry': True,
     # 'retries': 1,
