@@ -24,7 +24,7 @@ with DAG(
     money_to_json = AirbyteTriggerSyncOperator(
         task_id='airbyte_money_json',
         airbyte_conn_id='airbyte_local',
-        connection_id='10cd93a4-f264-420d-a640-cb5fe1a7e062',
+        connection_id='9a538305-e3ce-4f38-8f88-87792a33fe7c',
         asynchronous=False,
         timeout=3600,
         wait_seconds=3
