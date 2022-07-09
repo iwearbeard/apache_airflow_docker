@@ -25,9 +25,9 @@ services:
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
     ports:
-      - 5432:5432
+      - 5434:5434
     expose:
-      - "5432"
+      - "5434"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 5s
