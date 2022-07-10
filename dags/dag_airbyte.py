@@ -2,6 +2,7 @@ from datetime import datetime
 from airflow import DAG
 from airflow.utils.dates import days_ago
 from airflow.providers.airbyte.operators.airbyte import AirbyteTriggerSyncOperator
+from airflow.operators.bash_operator import BashOperator
 
 default_args = {
     'owner': 'airbyte',
@@ -29,5 +30,12 @@ with DAG(
         timeout=3600,
         wait_seconds=3
     )
+
+    # dbt_run = BashOperator(
+    #     task_id='dbt_run',
+    #     bash_command='cd /dbt-tool/go_dbt && source env/bin/activate && dbt run'
+    # )
+
+    # money_to_json >> dbt_run
 
     money_to_json
