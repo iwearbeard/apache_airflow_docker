@@ -58,7 +58,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - /Users/macbookpro/Documents/dbt-tool:/opt/airflow/dbt-tool
-      - /Users/macbookpro/.dbt/profiles.yml:/home/airflow/.dbt
+      - /Users/macbookpro/.dbt/profiles.yml:/home/airflow/.dbt/profiles.yml
     user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
     command: webserver
     depends_on:
@@ -80,7 +80,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - /Users/macbookpro/Documents/dbt-tool:/opt/airflow/dbt-tool
-      - /Users/macbookpro/.dbt/profiles.yml:/home/airflow/.dbt
+      - /Users/macbookpro/.dbt/profiles.yml:/home/airflow/.dbt/profiles.yml
     user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
     command: scheduler
     depends_on:
@@ -110,7 +110,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - /Users/macbookpro/Documents/dbt-tool:/opt/airflow/dbt-tool
-      - /Users/macbookpro/.dbt/profiles.yml:/home/airflow/.dbt
+      - /Users/macbookpro/.dbt/profiles.yml:/home/airflow/.dbt/profiles.yml
     user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-0}"
     command: celery worker
     depends_on:
