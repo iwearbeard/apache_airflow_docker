@@ -25,7 +25,7 @@ with DAG(
     airbyte_sync = AirbyteTriggerSyncOperator(
         task_id='airbyte_sync',
         airbyte_conn_id='airbyte_local',
-        connection_id='b24870b0-9f44-48cf-b3dc-d3a9ff44f385',
+        connection_id='connection_id',
         asynchronous=False,
         timeout=3600,
         wait_seconds=3
@@ -33,7 +33,7 @@ with DAG(
 
     dbt_run = BashOperator(
         task_id='dbt_run',
-        bash_command='cd /opt/airflow/dbt-tool/go_dbt && dbt run -m api_exchange'
+        bash_command='cd /dbt && dbt run -m table_model'
     )
 
     airbyte_sync >> dbt_run
