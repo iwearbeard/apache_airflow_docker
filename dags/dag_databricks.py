@@ -1,24 +1,26 @@
 from datetime import datetime
-from airflow import DAG
+from airflow.decorators import dag
 from airflow.providers.databricks.operators.databricks import DatabricksSubmitRunOperator
 
 default_args = {
-    'owner': 'nombre del owner',
+    'owner': 'owner_name',
     'start_date': datetime(2021, 10, 14), #Ejemplo: datetime(2021, 10, 14)
-    'email': ['lista de mails'],
+    'email': ['email'],
     'email_on_failure': True,
     # 'email_on_retry': True,
     # 'retries': 1,
     # 'retry_delay': timedelta(minutes=1)
 }
 
-with DAG(
-    dag_id='databricks_test',
+@dag(
+    dag_id='databricks',
     schedule_interval='0 7 * * 1-5', #Ejemplo:'0 7 * * 1-5' (sumar 3 horas dado que esta en UTF)
     default_args=default_args, 
     description='descripcion',
     catchup=False
-) as dag:
+)
+
+def databricks_task():
 
     #Definimos parametros sobre nuestro entorno de trabajo.
     notebook_task_params = {
@@ -35,3 +37,5 @@ with DAG(
         json=notebook_task_params)
 
     notebook_task
+
+execute = databricks_task()
